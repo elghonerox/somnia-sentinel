@@ -4,7 +4,6 @@
 
 **Real-time DeFi position monitoring and liquidation alert system powered by Somnia Data Streams**
 
-[Live Demo](https://somnia-sentinel.vercel.app) | [Demo Video](https://youtube.com/watch?v=xxx) | [Contracts](https://shannon-explorer.somnia.network)
 
 ---
 
@@ -269,18 +268,6 @@ npm run dev
 
 ---
 
-## 🎥 Demo Video
-
-[**Watch 5-Minute Demo**](https://youtube.com/watch?v=xxx)
-
-**Video Highlights:**
-- 0:00 - Problem: Polling delays in traditional DeFi apps
-- 0:30 - Solution: Somnia Data Streams real-time streaming
-- 1:30 - Live Demo: See instant updates in action
-- 3:00 - Technical: SDS SDK integration patterns
-- 4:30 - Impact: Why this matters for DeFi UX
-
----
 
 ## 💻 Technical Deep Dive
 
@@ -443,19 +430,11 @@ Traditional blockchain apps feel slow because they poll for updates. With **Somn
 
 ---
 
-## 👥 Team
-
-**[Your Name/Team]**
-- Background: [Your background]
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Twitter: [@yourhandle](https://twitter.com/yourhandle)
-
 ---
 
 ## 🙏 Acknowledgments
 
 - Somnia team for Data Streams SDK and hackathon support
-- [Mentors/community members who helped]
 - Built with: Next.js, Solidity, Recharts, Tailwind CSS
 
 ---
@@ -466,11 +445,6 @@ MIT License - See LICENSE file for details
 
 ---
 
-## 📞 Contact & Support
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/somnia-sentinel/issues)
-- **Email**: your.email@example.com
-- **Telegram**: [@yourhandle](https://t.me/yourhandle)
 
 ---
 
@@ -481,8 +455,7 @@ MIT License - See LICENSE file for details
 - [x] **Public GitHub repository** with comprehensive README
 - [x] **README explaining SDS usage** (see sections above)
 - [x] **Working Web3 dApp on Somnia Testnet**
-- [x] **Demo video (3-5 minutes)** - [Link](https://youtube.com/watch?v=xxx)
-
+-
 ### 🔥 SDS Integration Highlights
 
 **Multiple Stream Types:**
@@ -519,5 +492,3 @@ MIT License - See LICENSE file for details
 **This is not just a hackathon project - it's a production-ready foundation for real-time DeFi on Somnia.**
 
 ---
-
-**Built with ⚡ by [Your Team] for the Somnia Data Streams Mini Hackathon**
