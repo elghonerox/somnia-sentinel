@@ -1,4 +1,4 @@
-// src/components/Dashboard/RealTimeDashboard.tsx
+// src/components/dashboard/RealTimeDashboard.tsx
 /**
  * Main Real-Time Dashboard Component
  * 
@@ -16,7 +16,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { usePriceStream } from '@/hooks/usePriceStream';
 import { usePositionMonitor, useLiquidationCountdown } from '@/hooks/usePositionMonitor';
 import { CONTRACTS } from '@/services/sdsClient';
@@ -28,7 +28,12 @@ import { LiveIndicator } from '../shared/LiveIndicator';
 import { ConnectionStatus } from '../shared/ConnectionStatus';
 
 export function RealTimeDashboard() {
+  // ============================================
+  // WALLET CONNECTION
+  // ============================================
   const { address, isConnected: walletConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
 
   // ============================================
   // SDS STREAMS
@@ -65,6 +70,16 @@ export function RealTimeDashboard() {
   }, [positionMonitor.risk?.category, positionMonitor.isAtRisk, soundEnabled]);
 
   // ============================================
+  // WALLET CONNECTION HANDLER
+  // ============================================
+  const handleConnect = () => {
+    // Use the first available connector (MetaMask/injected)
+    if (connectors && connectors.length > 0) {
+      connect({ connector: connectors[0] });
+    }
+  };
+
+  // ============================================
   // RENDER
   // ============================================
 
@@ -88,37 +103,62 @@ export function RealTimeDashboard() {
 
             {/* Connection indicators */}
             <div className="flex items-center gap-4">
-              <LiveIndicator isLive={priceStream.isConnected} label="Price Feed" />
-              <LiveIndicator
-                isLive={positionMonitor.isConnected}
-                label="Position Monitor"
-              />
-              
-              <button
-                onClick={() => setShowComparison(!showComparison)}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition"
-              >
-                {showComparison ? 'Hide' : 'Show'} Comparison Demo
-              </button>
+              {walletConnected ? (
+                <>
+                  <LiveIndicator isLive={priceStream.isConnected} label="Price Feed" />
+                  <LiveIndicator
+                    isLive={positionMonitor.isConnected}
+                    label="Position Monitor"
+                  />
+                  
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm text-gray-400">
+                      {address?.slice(0, 6)}...{address?.slice(-4)}
+                    </div>
+                    <button
+                      onClick={() => disconnect()}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition"
+                    >
+                      Disconnect
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setShowComparison(!showComparison)}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition"
+                  >
+                    {showComparison ? 'Hide' : 'Show'} Comparison Demo
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={handleConnect}
+                  className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
+                >
+                  Connect Wallet
+                </button>
+              )}
             </div>
           </div>
 
           {/* Connection Status Details */}
-          <ConnectionStatus
-            streams={[
-              {
-                name: 'Price Stream',
-                isConnected: priceStream.isConnected,
-                updateCount: priceStream.updateCount,
-                error: priceStream.error,
-              },
-              {
-                name: 'Position Monitor',
-                isConnected: positionMonitor.isConnected,
-                error: positionMonitor.error,
-              },
-            ]}
-          />
+          {walletConnected && (
+            <ConnectionStatus
+              streams={[
+                {
+                  name: 'Price Stream',
+                  isConnected: priceStream.isConnected,
+                  updateCount: priceStream.updateCount,
+                  error: priceStream.error,
+                },
+                {
+                  name: 'Position Monitor',
+                  isConnected: positionMonitor.isConnected,
+                  error: positionMonitor.error,
+                },
+              ]}
+            />
+          )}
         </div>
       </header>
 
@@ -136,9 +176,15 @@ export function RealTimeDashboard() {
                 Connect to Somnia Testnet to start monitoring your DeFi positions
                 in real-time
               </p>
-              <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium">
+              <button
+                onClick={handleConnect}
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-bold text-lg transition-all duration-200 transform hover:scale-105"
+              >
                 Connect Wallet
               </button>
+              <p className="text-gray-500 text-sm mt-4">
+                Make sure you're on Somnia Testnet
+              </p>
             </div>
           </div>
         ) : (

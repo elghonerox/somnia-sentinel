@@ -83,27 +83,22 @@ export interface ActivityEvent {
  * 
  * @param account - Optional wallet account for write operations
  * @returns Configured SDK instance
- * 
- * Usage:
- * ```typescript
- * const sdk = initializeSDK();
- * const subscription = await sdk.streams.subscribe(
- *   'PriceUpdated',
- *   [],
- *   (event) => console.log('New price:', event)
- * );
- * ```
  */
 export const initializeSDK = (account?: Account) => {
   const rpcUrl = process.env.NEXT_PUBLIC_SOMNIA_RPC || 'https://dream-rpc.somnia.network/';
 
-  // Create public client for reading blockchain data
+  // Create public client with polling transport
+  // SDS SDK will handle WebSocket internally
   const publicClient = createPublicClient({
     chain: somniaTestnet,
-    transport: http(rpcUrl),
+    transport: http(rpcUrl, {
+      // Enable polling for events
+      batch: false,
+      retryCount: 5,
+      retryDelay: 1000,
+    }),
   });
 
-  // Create wallet client if account provided (for write operations)
   const walletClient = account
     ? createWalletClient({
         chain: somniaTestnet,
@@ -112,7 +107,6 @@ export const initializeSDK = (account?: Account) => {
       })
     : undefined;
 
-  // Initialize SDS SDK
   return new SDK({
     public: publicClient,
     wallet: walletClient,
